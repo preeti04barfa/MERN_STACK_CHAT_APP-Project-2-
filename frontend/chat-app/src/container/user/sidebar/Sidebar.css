@@ -1,0 +1,61 @@
+.box-one {
+  height: 100vh;
+  width: 400px;
+  background-color: white;
+  position: fixed;
+  padding: 20px 0px 5px 25px;
+}
+
+.box-two {
+  width: 375px;
+  height: 100vh;
+}
+
+.box-three .heading-logo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+
+.name .heading-name {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 500px;
+  line-height: 3px;
+  text-align: left;
+}
+.box-two .box-three {
+  height: 94px;
+  gap: 12px;
+}
+.heading-logo .agent-filter {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #f7f7fd;
+  height: 32px;
+  width: 91px;
+  margin-top: 10px;
+}
+
+.agent-filter .heading-agent {
+  line-height: 0px;
+  padding: 3px;
+}
+.agent-filter .heading-filter {
+  padding-top: 8px;
+}
+
+.box-three .search-box {
+  background-color: #f7f7fd;
+}
+
+.box-four {
+  background-color: antiquewhite;
+  height: 100vh;
+  margin-top: 10px;
+}
+
+.search-box .search{
+    margin-left: 0px;
+}

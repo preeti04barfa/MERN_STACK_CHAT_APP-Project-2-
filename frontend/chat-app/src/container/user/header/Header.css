@@ -1,0 +1,63 @@
+.main-header {
+  width: 941px;
+  height: 95px;
+  margin-left: 425px;
+  /* border: 0.5px solid gray; */
+  padding: 10px 0px 0px 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: fixed;
+}
+
+.user-profile {
+  width: 156px;
+  height: 50px;
+  /* border: 0.5px solid gray; */
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.user-image img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.username-offon {
+  height: 50px;
+  width: 100px;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* .username-offon p {
+    margin: 0;
+    font-size: 14px;
+} */
+
+.call-icons {
+  width: 120px;
+  height: 24px;
+  margin: 30px 90px 38px 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.username-name p {
+  margin: 0;
+  font-weight: 600px;
+  font-size: 16px;
+}
+
+.user-status p {
+  margin: 0;
+  font-weight: 600px;
+  font-size: 16px;
+}

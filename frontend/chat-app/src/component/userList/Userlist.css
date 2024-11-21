@@ -1,0 +1,78 @@
+.user-list {
+    padding: 10px;
+    background-color:white; 
+    max-height: 480px; 
+    overflow-y: auto;
+    /* padding-bottom: 100px; */
+}
+
+.userlist-container {
+    display: flex;
+    flex-direction: column;
+
+    
+    /* gap: 10px;  */
+}
+
+.userdata-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border: 0px solid #76767C; 
+    border-bottom: 0.5px solid #76767C; 
+}
+
+.user-image {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-image img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+}
+
+.usermsg-main {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.name-time {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 18px;
+}
+
+.name-time .user-name p,
+.name-time .user-time p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+.user-msg{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+   height: 18px;
+   /* width: 18px; */
+}
+
+.user-msg p {
+    margin: 5px 0 0 0;
+    font-size: 13px;
+    color: #555;
+}
+
+/* ::-webkit-scrollbar {
+    width: 0px;
+  } */
