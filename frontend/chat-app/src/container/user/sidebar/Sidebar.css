@@ -1,14 +1,14 @@
 .box-one {
-  height: 100vh;
+  /* height: 100vh; */
   width: 400px;
   background-color: white;
-  position: fixed;
-  padding: 20px 0px 5px 25px;
+  /* position: fixed; */
+  padding: 20px 0px 0px 25px;
 }
 
 .box-two {
   width: 375px;
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 .box-three .heading-logo {
@@ -52,7 +52,7 @@
 
 .box-four {
   background-color: antiquewhite;
-  height: 100vh;
+  /* height: 1; */
   margin-top: 10px;
 }
 

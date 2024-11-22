@@ -1,7 +1,7 @@
 .user-list {
     padding: 10px;
     background-color:white; 
-    max-height: 480px; 
+    max-height: 472px; 
     overflow-y: auto;
     /* padding-bottom: 100px; */
 }
@@ -21,7 +21,7 @@
     padding: 10px;
     background-color: #fff;
     border: 0px solid #76767C; 
-    border-bottom: 0.5px solid #76767C; 
+    border-bottom: 0.5px solid #BABABA; 
 }
 
 .user-image {

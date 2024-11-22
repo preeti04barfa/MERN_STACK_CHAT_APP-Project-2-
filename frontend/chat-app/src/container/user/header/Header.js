@@ -2,6 +2,7 @@ import React from 'react';
 import Index from '../../index';
 import '../header/Header.css';
 import avtarImage from '../../../assets/png/avtar.png';
+  
 
 const Header = () => {
     return (
@@ -12,10 +13,11 @@ const Header = () => {
                 </Index.Box>
                 <Index.Box className="username-offon">
                     <Index.Box className='username-name'>
-                        <p><strong>Preeti</strong></p>
+                        <p><strong>Durgesh</strong></p>
                     </Index.Box>
                     <Index.Box className='user-status'>
-                        <p>Online</p>
+                        <Index.Box className='status-icon'> <Index.FiberManualRecordIcon className='onoff-icon'/></Index.Box>
+                        <Index.Box className='status-OnOffline'> <p>Online</p></Index.Box>
                     </Index.Box>
                 </Index.Box>
             </Index.Box>

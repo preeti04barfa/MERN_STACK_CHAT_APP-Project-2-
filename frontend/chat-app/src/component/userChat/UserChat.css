@@ -1,0 +1,144 @@
+.main-chat-componenet {
+  height: 425px;
+  width: 941px;
+  background-color: #f7f7fd;
+}
+
+.main-chat-box {
+  height: 425px;
+  width: 870px;
+  margin-left: 23px;
+  /* border: 2px solid rgb(176, 145, 145); */
+}
+
+.main-send-msg {
+  height: 72px;
+  width: 937px;
+  /* border: 2px solid rgb(176, 145, 145); */
+}
+
+.main-send-contains {
+  height: 52px;
+  width: 910px;
+  /* border: 2px solid rgb(176, 145, 145); */
+  margin: 10px 0px 0px 15px;
+  display: flex;
+}
+
+.main-home-icon {
+  height: 52px;
+  width: 40px;
+  /* border: 2px solid rgb(176, 145, 145); */
+}
+.main-home-icon .icon-dashboard {
+  padding-top: 11px;
+  color: #2e3b5b;
+}
+
+.main-sent-data {
+  height: 52px;
+  width: 870px;
+  /* border: 2px solid rgb(146, 71, 71); */
+}
+.main-sent-data .main-send-box {
+  display: flex;
+  border-radius: 20px;
+  background-color: #f7f7fd;
+  height: 50px;
+  justify-content: space-between;
+  margin-right: 15px;
+}
+
+.test-msg-write {
+  /* padding-top: 12px; */
+}
+.attach-sent-icon {
+  display: flex;
+  /* padding-top: 12px; */
+}
+
+.attach-sent-icon .msg-sent-icon {
+  height: 40px;
+  width: 64px;
+  background-color: #2e3b5b;
+  border-radius: 10px;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.attach-sent-icon .msg-sent-icon .sent-icon {
+  color: #f7f7fd;
+  padding: 8px 0px 0px 35px;
+}
+
+.attach-sent-icon .file-attach-icon {
+  margin-top: 15px;
+  height: 20px;
+  width: 20px;
+  border: 2px solid #2e3b5b;
+  border-radius: 50%;
+  /* margin-right: 5px; */
+}
+
+.attach-sent-icon .file-attach-icon .attach-icon {
+  height: 20px;
+  width: 20px;
+  color: #2e3b5b;
+}
+
+.test-msg-write .outlined-basic {
+  width: 750px;
+  /* border: none; */
+  /* outline: none; */
+  /* display: none; */
+}
+.test-msg-write .outlined-basic input {
+  border: none;
+}
+.test-msg-write .outlined-basic fieldset {
+  border: none;
+}
+/* .msg-to {
+  background-color: #2e3b5b;
+  width: 350px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  color: white;
+}
+
+.msg-from {
+  background-color: #000929;
+  width: 350px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  color: white;
+} */
+
+/* .sender-reciver-box {
+    justify-content: space-between;
+} */
+
+.message-text p {
+  padding: 5px;
+  max-width: max-content;
+  background-color: blueviolet;
+}
+
+.message-right {
+  max-width: 303px;
+}
+
+.message-left {
+  text-align: end;
+  display: flex;
+  justify-content: end;
+}
+
+.message-text{
+    max-width: 303px;
+}
+
+.message-main-box{
+    height: calc(100vh - 105px);
+    overflow: auto;
+}
