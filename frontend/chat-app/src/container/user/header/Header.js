@@ -4,7 +4,7 @@ import '../header/Header.css';
 import avtarImage from '../../../assets/png/avtar.png';
   
 
-const Header = () => {
+const Header = ({ selectedUser }) => {
     return (
         <Index.Box className="main-header">
             <Index.Box className="user-profile">
@@ -13,7 +13,7 @@ const Header = () => {
                 </Index.Box>
                 <Index.Box className="username-offon">
                     <Index.Box className='username-name'>
-                        <p><strong>Durgesh</strong></p>
+                        <p><strong>{selectedUser}</strong></p>
                     </Index.Box>
                     <Index.Box className='user-status'>
                         <Index.Box className='status-icon'> <Index.FiberManualRecordIcon className='onoff-icon'/></Index.Box>

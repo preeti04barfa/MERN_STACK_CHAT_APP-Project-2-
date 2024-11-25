@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Index from "../../index"
 import "../sidebar/Sidebar.css";
 import Userlist from '../../../component/userList/Userlist';
@@ -42,18 +42,22 @@ const StyledInputBase = Index.styled(Index.InputBase)(({ theme }) => ({
         },
     },
 }));
-const Sidebar = () => {
+const Sidebar = ({ setSelectedUser, selectedUser }) => {
+    const [searchUser, setSearchUser] = useState("");
+
     return (
         <Index.Box className='box-one'>
             <Index.Box className='box-two'>
                 <Index.Box className='box-three'>
                     <Index.Box className='heading-logo'>
                         <Index.Box className='name'>
-                            <Index.Box className='heading-name' ><p>Messaging</p></Index.Box>
+                            <Index.Box className='heading-name'><p>Messaging</p></Index.Box>
                         </Index.Box>
                         <Index.Box className='agent-filter'>
                             <Index.Box className='heading-agent'><p>Agents</p></Index.Box>
-                            <Index.Box className='heading-filter'> <Index.FilterListIcon className='agent-icon' /></Index.Box>
+                            <Index.Box className='heading-filter'>
+                                <Index.FilterListIcon className='agent-icon' />
+                            </Index.Box>
                         </Index.Box>
                     </Index.Box>
                     <Index.Box className='search-box'>
@@ -64,19 +68,22 @@ const Sidebar = () => {
                             <StyledInputBase
                                 placeholder="Search in dashboard"
                                 inputProps={{ 'aria-label': 'search' }}
+                                value={searchUser}
+                                onChange={(e) => setSearchUser(e.target.value)}
                             />
                         </Search>
                     </Index.Box>
                 </Index.Box>
                 <Index.Box className='box-four'>
-                    <Userlist />
-
+                    <Userlist
+                        searchUser={searchUser}
+                        setSelectedUser={setSelectedUser}
+                        selectedUser={selectedUser}
+                    />
                 </Index.Box>
-
             </Index.Box>
-
         </Index.Box>
-    )
-}
+    );
+};
 
-export default Sidebar
+export default Sidebar;

@@ -22,6 +22,7 @@
     background-color: #fff;
     border: 0px solid #76767C; 
     border-bottom: 0.5px solid #BABABA; 
+    cursor: pointer
 }
 
 .user-image {
@@ -57,7 +58,7 @@
 .name-time .user-time p {
     margin: 0;
     font-size: 14px;
-    color: #333;
+    /* color: #333; */
 }
 .user-msg{
     display: flex;
@@ -76,3 +77,11 @@
 /* ::-webkit-scrollbar {
     width: 0px;
   } */
+
+  .userdata-main:hover{
+    background-color: #BABABA;
+  }
+
+  .userdata-main.selected {
+    background-color: #BABABA; 
+}
