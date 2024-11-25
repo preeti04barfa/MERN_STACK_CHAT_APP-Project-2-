@@ -1,0 +1,4 @@
+.header-sidebar{
+    display: flex;
+    flex-direction: row;
+}
