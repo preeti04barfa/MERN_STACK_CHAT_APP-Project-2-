@@ -11,5 +11,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import SendIcon from '@mui/icons-material/Send';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import TextField from '@mui/material/TextField';
+import Avatar from '@mui/material/Avatar';
+import AvatarGroup from '@mui/material/AvatarGroup';
 
-export default {Box, FilterListIcon, SearchIcon, styled, alpha, InputBase,DoneAllIcon,VideocamIcon,CallIcon,GridViewIcon, Outlet, FiberManualRecordIcon,DashboardIcon, SendIcon, AttachmentIcon,TextField}
+export default {Box, FilterListIcon, SearchIcon, styled, alpha, InputBase,DoneAllIcon,VideocamIcon,CallIcon,GridViewIcon, 
+    Outlet, FiberManualRecordIcon,DashboardIcon, SendIcon, AttachmentIcon,TextField, Avatar,AvatarGroup}

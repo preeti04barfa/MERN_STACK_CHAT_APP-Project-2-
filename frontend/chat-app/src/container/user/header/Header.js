@@ -5,8 +5,11 @@ import avtarImage from '../../../assets/png/avtar.png';
   
 
 const Header = ({ selectedUser }) => {
+    console.log(selectedUser,"selectedUser");
+    
     return (
-        <Index.Box className="main-header">
+        <>
+                   {selectedUser ? ( <Index.Box className="main-header">
             <Index.Box className="user-profile">
                 <Index.Box className="user-image">
                     <img src={avtarImage} alt="User Avatar" />
@@ -33,6 +36,13 @@ const Header = ({ selectedUser }) => {
                 </Index.Box>
             </Index.Box>
         </Index.Box>
+              ) : (
+                <Index.Box className="no-user-chat">
+                    {/* <p>No user chat found</p> */}
+                </Index.Box>
+            )}
+        </>
+ 
     );
 };
 

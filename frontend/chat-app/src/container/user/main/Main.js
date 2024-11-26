@@ -4,9 +4,11 @@ import Sidebar from '../sidebar/Sidebar';
 import Header from '../header/Header';
 import "./main.css";
 import { Outlet } from 'react-router-dom';
+import UserChat from '../../../component/userChat/UserChat';
+
 
 const Main = () => {
-    const [selectedUser, setSelectedUser] = useState("Durgesh"); 
+    const [selectedUser, setSelectedUser] = useState(null); 
 
     return (
         <Index.Box className='header-sidebar'>
@@ -20,6 +22,7 @@ const Main = () => {
                 <Index.Box>
                     <Outlet />
                 </Index.Box>
+                <UserChat selectedUser={selectedUser}  />
             </Index.Box>
         </Index.Box>
     );
