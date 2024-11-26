@@ -4,7 +4,7 @@ import "../userList/Userlist.css";
 import avtarImage from "../../assets/png/avtar.png";
 
 const userMessages = [
-    { userName: 'Preeti', message: 'Hello there!', time: '10:30 AM', isRead: true },
+    { userName: 'Preeti', message: 'Hello there!Hello there!Hello there!Hello there!', time: '10:30 AM', isRead: true },
     { userName: 'Durgesh', message: 'How are you?', time: '10:35 AM', isRead: true },
     { userName: 'Jagriti', message: 'Good morning!', time: '10:40 AM', isRead: false },
     { userName: 'Jatin', message: 'See you soon.', time: '10:50 AM', isRead: true },
@@ -41,7 +41,7 @@ const Userlist = ({ searchUser,  selectedUser, setSelectedUser }) => {
                             </Index.Box>
                             <Index.Box className="user-msg">
                                 <Index.Box>
-                                    <p>{user.message}</p>
+                                    <p>   {user.message.length > 25 ? `${user.message.slice(0, 25)}...` : user.message}</p>
                                 </Index.Box>
                                 <Index.Box>
                                     <p>
