@@ -31,7 +31,7 @@ const formatTime = (timestamp) => {
 
 const chatArray = [
   { _id: 1, from: "Hi! How are you?", timestamp: "2024-11-22T10:00:00Z" },
-  { _id: 2, to: "I'm good, thanks! What about you?", image: [chatImage1, chatImage, chatImage2], timestamp: "2024-11-22T10:02:00Z" },
+  { _id: 2, to: "I'm good, thanks! What about you? kbdfkshb sa,dfhsakdf a,jsdfgbasdfk asfgasd fa,sdkfgbm df,asjkdkd c,asdkufhasdnfmahbs", image: [chatImage1, chatImage, chatImage2], timestamp: "2024-11-22T10:02:00Z" },
   { _id: 3, from: "I'm doing great! Working on a new project.", timestamp: "2024-11-22T10:05:00Z" },
   { _id: 4, from: "That’s awesome! Let me know if I can help.", timestamp: "2024-11-22T10:07:00Z" },
   { _id: 5, to: "Sounds good!",image: [chatImage1, chatImage2, chatImage], timestamp: "2024-11-25T10:15:00Z" },
