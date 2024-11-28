@@ -5,7 +5,13 @@ import chatImage from "../../assets/jpg/chat-image.jpg";
 import chatImage1 from "../../assets/jpg/chat-image1.jpg";
 import chatImage2 from "../../assets/jpg/chat-image2.webp"
 import { Input } from '@mui/material';
-
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DownloadIcon from '@mui/icons-material/Download';
+// import DownloadingIcon from '@mui/icons-material/Downloading';
+// import FileDownloadDoneIcon from '@mui/icons-material/FileDownloadDone';
+// import Typography from '@mui/material/Typography';
+// import Modal from '@mui/material/Modal';
 
 const formatDate = (timestamp) => {
   const date = new Date(timestamp);
@@ -22,7 +28,17 @@ const formatDate = (timestamp) => {
   }
 };
 
-
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 800,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 const formatTime = (timestamp) => {
   const date = new Date(timestamp);
@@ -34,7 +50,7 @@ const chatArray = [
   { _id: 2, to: "I'm good, thanks! What about you? kbdfkshb sa,dfhsakdf a,jsdfgbasdfk asfgasd fa,sdkfgbm df,asjkdkd c,asdkufhasdnfmahbs", image: [chatImage1, chatImage, chatImage2], timestamp: "2024-11-22T10:02:00Z" },
   { _id: 3, from: "I'm doing great! Working on a new project.", timestamp: "2024-11-22T10:05:00Z" },
   { _id: 4, from: "That’s awesome! Let me know if I can help.", timestamp: "2024-11-22T10:07:00Z" },
-  { _id: 5, to: "Sounds good!",image: [chatImage1, chatImage2, chatImage], timestamp: "2024-11-25T10:15:00Z" },
+  { _id: 5, to: "Sounds good!", image: [chatImage1, chatImage2, chatImage], timestamp: "2024-11-25T10:15:00Z" },
   { _id: 6, from: "I'm doing great! Working on a new project.", timestamp: "2024-11-25T10:05:00Z" },
   { _id: 7, from: "That’s awesome! Let me know if I can help.", timestamp: "2024-11-25T10:07:00Z" },
   { _id: 8, to: "Sounds good!", timestamp: "2024-11-25T10:15:00Z" },
@@ -48,6 +64,7 @@ const UserChat = ({ selectedUser }) => {
 
   let lastDate = "";
   const [showAllImages, setShowAllImages] = useState({});
+  const [selectedImage, setSelectedImage] = useState(null)
   const [messages, setMessages] = useState(chatArray);
   console.log(messages, "messages");
 
@@ -59,6 +76,23 @@ const UserChat = ({ selectedUser }) => {
     }));
   };
 
+  const handleSingleImageClick = (image) => {
+    console.log(image, "image");
+
+    setSelectedImage(image)
+  }
+
+  
+  const handleDownload = () => {
+    if (selectedImage) {
+      const link = document.createElement('a');
+      link.href = selectedImage;
+      link.download = `${selectedImage}`; 
+      link.click();
+    }
+  };
+
+  const handleClose = () => setSelectedImage(false);
 
   const handleIconClick = () => {
     document.getElementById('fileInput').click();
@@ -102,6 +136,7 @@ const UserChat = ({ selectedUser }) => {
                                   src={image}
                                   alt={`Images ${imageIndex + 1}`}
                                   className="image-chat"
+                                  onClick={(e) => handleSingleImageClick(image, e)}
                                 />
                                 {imageIndex === 1 && msg.image.length > 2 && !isImagesExpanded && (
                                   <p className="image-overlay">+{msg.image.length - 2}</p>
@@ -117,6 +152,7 @@ const UserChat = ({ selectedUser }) => {
                                     src={image}
                                     alt={`Images ${imageIndex + 3}`}
                                     className="image-chat"
+                                    onClick={(e) => handleSingleImageClick(image, e)}
                                   />
                                 ))}
                               </Index.Box>
@@ -148,6 +184,7 @@ const UserChat = ({ selectedUser }) => {
                                     src={image}
                                     alt={`Images ${imageIndex + 1}`}
                                     className="image-chat"
+                                    onClick={(e) => handleSingleImageClick(image, e)}
                                   />
                                   {imageIndex === 1 && msg.image.length > 2 && !isImagesExpanded && (
                                     <p className="image-overlay">+{msg.image.length - 2}</p>
@@ -163,6 +200,7 @@ const UserChat = ({ selectedUser }) => {
                                       src={image}
                                       alt={`Images ${imageIndex + 3}`}
                                       className="image-chat"
+                                      onClick={(e) => handleSingleImageClick(image, e)}
                                     />
                                   ))}
                                 </Index.Box>
@@ -206,6 +244,15 @@ const UserChat = ({ selectedUser }) => {
           <p className='no-user-msg'>No user chat found</p>
         </Index.Box>
       )}
+
+      <Dialog open={selectedImage} onClose={handleClose} onOpenChange={() => setSelectedImage(null)} className='main-model'>
+      <DownloadIcon className="download-image" onClick={handleDownload} />
+        <DialogContent className="model-Image">
+          {selectedImage && (
+            <img src={selectedImage} alt="Full size chat image" className="model-contain"  />
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
