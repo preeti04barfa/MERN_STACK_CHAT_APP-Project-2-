@@ -65,8 +65,10 @@ const UserChat = ({ selectedUser }) => {
   let lastDate = "";
   const [showAllImages, setShowAllImages] = useState({});
   const [selectedImage, setSelectedImage] = useState(null)
+  const [attachments, setAttachments] = useState([]);
   const [messages, setMessages] = useState(chatArray);
-  console.log(messages, "messages");
+  const [newMessage, setNewMessage] = useState('');
+
 
 
   const handleImageClick = (id) => {
@@ -78,16 +80,15 @@ const UserChat = ({ selectedUser }) => {
 
   const handleSingleImageClick = (image) => {
     console.log(image, "image");
-
     setSelectedImage(image)
   }
 
-  
+
   const handleDownload = () => {
     if (selectedImage) {
       const link = document.createElement('a');
       link.href = selectedImage;
-      link.download = `${selectedImage}`; 
+      link.download = `${selectedImage}`;
       link.click();
     }
   };
@@ -97,12 +98,42 @@ const UserChat = ({ selectedUser }) => {
   const handleIconClick = () => {
     document.getElementById('fileInput').click();
   };
+  const handleMessageChange = (e) => {
+    setNewMessage(e.target.value);
+  };
 
+  const handleAttachmentChange = (e) => {
+    console.log(e.target.files[0], 4545151)
+    setAttachments(Array.from(e.target.files));
+  };
+  console.log(attachments[0], 84515654515)
+  const handleSendMessage = () => {
+    if (newMessage.trim() || attachments.length > 0) {
+      window.alert("sfsdfsdf")
+      const newMsg = {
+        _id: messages?.length + 1,
+        to: newMessage,
+        timestamp: new Date().toISOString()
+      };
+      if (attachments.length > 0) {
+        newMsg.image = attachments.map(file => URL.createObjectURL(file))
+        // newMsg.image=attachments.map(file => URL.createObjectURL(file))
+
+      }
+      console.log(newMsg, "newmsg")
+      setMessages([...messages, newMsg]);
+      setNewMessage('');
+      setAttachments([]);
+    }
+  };
+
+  console.log(messages, "messageas")
   return (
     <>
+      <img src={attachments[0]} />
       {selectedUser ? (<Index.Box className='main-chat-componenet'>
         <Index.Box className='main-chat-box'>
-          {chatArray.map((msg, index) => {
+          {messages.map((msg, index) => {
             const messageDate = formatDate(msg.timestamp);
             const messageTime = formatTime(msg.timestamp);
 
@@ -224,15 +255,21 @@ const UserChat = ({ selectedUser }) => {
             <Index.Box className='main-sent-data'>
               <Index.Box className='main-send-box'>
                 <Index.Box className='test-msg-write'>
-                  <Index.TextField className="outlined-basic" placeholder='Type your message' />
+                  <Index.TextField className="outlined-basic" placeholder='Type your message' value={newMessage}
+                    onChange={handleMessageChange} />
                 </Index.Box>
                 <Index.Box className='attach-sent-icon'>
                   <Index.Box className='file-attach-icon'>
-                    <Index.AttachmentIcon className='attach-icon' onClick={handleIconClick} />
-                    <Input className='select-file' type='file' id="fileInput"
+                    <Index.AttachmentIcon onClick={handleIconClick} className='attach-icon' />
+                    <Input className='select-file'
+                      //  id="select-file"
+                      id="fileInput"
+                      type='file'
+                      multiple
+                      onChange={handleAttachmentChange}
                       style={{ display: 'none' }} />
                   </Index.Box>
-                  <Index.Box className='msg-sent-icon'><Index.SendIcon className='sent-icon' /></Index.Box>
+                  <Index.Box className='msg-sent-icon'><Index.SendIcon className='sent-icon' onClick={handleSendMessage} /></Index.Box>
                 </Index.Box>
               </Index.Box>
             </Index.Box>
@@ -246,10 +283,10 @@ const UserChat = ({ selectedUser }) => {
       )}
 
       <Dialog open={selectedImage} onClose={handleClose} onOpenChange={() => setSelectedImage(null)} className='main-model'>
-      <DownloadIcon className="download-image" onClick={handleDownload} />
+        <DownloadIcon className="download-image" onClick={handleDownload} />
         <DialogContent className="model-Image">
           {selectedImage && (
-            <img src={selectedImage} alt="Full size chat image" className="model-contain"  />
+            <img src={selectedImage} alt="Full size chat image" className="model-contain" />
           )}
         </DialogContent>
       </Dialog>
