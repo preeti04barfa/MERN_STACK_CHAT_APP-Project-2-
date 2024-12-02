@@ -1,4 +1,5 @@
-import { handleErrorResponse, ResponseMessage, sendResponse, StatusCodes, User } from "../index.js";
+import { handleErrorResponse, jwt, ResponseMessage, sendResponse, StatusCodes, User } from "../index.js";
+
 
 export const UserCreate = async (req, res) => {
     try {
@@ -28,7 +29,7 @@ export const UserCreate = async (req, res) => {
 export const UserGet = async (req, res) => {
     try {
         const users = await User.find({isDelete:false});
-        if (users) {
+        if (!users) {
             return sendResponse(
                 res,
                 StatusCodes.NOT_FOUND,
@@ -43,6 +44,57 @@ export const UserGet = async (req, res) => {
             users
         );
   
+    } catch (error) {
+        return handleErrorResponse(res, error);
+    }
+};
+
+export const userLogin = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const user = await User.findOne({ email, isDelete: 0 });
+        if (!user) {
+
+            return sendResponse(
+                res,
+                StatusCodes.BAD_REQUEST,
+                ResponseMessage.USER_NOT_EXISTS,
+                []
+            );
+        }
+
+        const payload = { userId: user._id };
+        const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1h' });
+
+        return sendResponse(
+            res,
+            StatusCodes.OK,
+            ResponseMessage.LOGIN_SUCCESSFULLY,
+            { token }
+        );
+
+    } catch (error) {
+        console.error(error);
+        return handleErrorResponse(res, error);
+    }
+};
+
+export const getSingleUser = async (req, res) => {
+    try {
+        const user = await User.findOne({ _id: req.user_id, isDelete: 0 });
+        if (!user) {
+            return res.status(400).json({
+                status: StatusCodes.BAD_REQUEST,
+                message: ResponseMessage.USER_NOT_EXISTS,
+                data: []
+            });
+        }
+        return sendResponse(
+            res,
+            StatusCodes.OK,
+            ResponseMessage.GET_SINGLE_USER,
+            user
+        );
     } catch (error) {
         return handleErrorResponse(res, error);
     }

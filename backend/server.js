@@ -1,6 +1,9 @@
 import { setupSocket } from "./src/config/Socket.js";
-import { ChatRouter, dbConnection, express, http, router, Server } from "./src/index.js";
+import { ChatRouter, dbConnection, dotenv, express, http, router, Server } from "./src/index.js";
+
 import cors from 'cors';
+dotenv.config();
+const PORT = process.env.PORT
 
 const app = express();
 app.use(cors());
@@ -12,8 +15,8 @@ app.use('/api', router);
 app.use('/api/chat', ChatRouter);
 
 
-server.listen(3002, () => {
-  console.log('Server listening on:3002');
+server.listen(PORT, () => {
+  console.log(`Server listening on:${PORT}`);
 });
 
 export { io }

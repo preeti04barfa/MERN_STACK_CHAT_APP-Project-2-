@@ -1,0 +1,72 @@
+
+.left-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f9;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .form-container {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+
+  .register-form .email {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+ 
+  .register-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .login-btn {
+    background-color: #2E3B5B;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+  }
+  
+  .login-btn:hover {
+    background-color: #0056b3;
+  }
+  
+ 
+  .MuiFormHelperText-root {
+    color: #d32f2f !important; 
+    font-size: 12px;
+    margin-top: 4px;
+  }
+/* 
+  .register-actions p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .register-actions a {
+    color: #0056b3;
+    text-decoration: none;
+    margin-left: 5px;
+    font-weight: bold;
+  } */

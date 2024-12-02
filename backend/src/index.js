@@ -9,13 +9,18 @@ import { ResponseMessage } from "./utils/ResponseMessage.js";
 import { StatusCodes } from "http-status-codes";
 import { handleErrorResponse, sendResponse } from "./service/CommonService.js";
 import { io } from "../server.js";
-import { UserCreate, UserGet } from "./controller/User.js";
+import { getSingleUser, UserCreate, UserGet, userLogin } from "./controller/User.js";
+import auth from "./middleware/UserAuth.js";
 import router from "./router/userRouter.js";
 import { getChatHistory } from "./controller/Chat.js";
 import ChatRouter from "./router/ChatRouter.js";
 import { Room } from "./model/RoomModel.js";
+import axios from 'axios'
+import jwt from 'jsonwebtoken'
+import dotenv from "dotenv";
+
 
 
 export {express, Server, http, mongoose, dbConnection, User, Chat, ResponseMessage,StatusCodes, handleErrorResponse, sendResponse, io, 
-    UserCreate, router, UserGet, getChatHistory, ChatRouter, Room
+    UserCreate, auth, router, UserGet, getChatHistory, ChatRouter, Room, axios, jwt, userLogin, dotenv, getSingleUser
 }

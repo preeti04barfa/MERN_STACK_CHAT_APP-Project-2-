@@ -8,10 +8,8 @@ import { Input } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DownloadIcon from '@mui/icons-material/Download';
-// import DownloadingIcon from '@mui/icons-material/Downloading';
-// import FileDownloadDoneIcon from '@mui/icons-material/FileDownloadDone';
-// import Typography from '@mui/material/Typography';
-// import Modal from '@mui/material/Modal';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 
 const formatDate = (timestamp) => {
   const date = new Date(timestamp);
@@ -106,10 +104,16 @@ const UserChat = ({ selectedUser }) => {
     console.log(e.target.files[0], 4545151)
     setAttachments(Array.from(e.target.files));
   };
-  console.log(attachments[0], 84515654515)
+
+  const handleRemoveAttachment = (index) => {
+    const newAttachments = [...attachments];
+    newAttachments.splice(index, 1);
+    setAttachments(newAttachments);
+  };
+
   const handleSendMessage = () => {
     if (newMessage.trim() || attachments.length > 0) {
-      window.alert("sfsdfsdf")
+
       const newMsg = {
         _id: messages?.length + 1,
         to: newMessage,
@@ -130,7 +134,6 @@ const UserChat = ({ selectedUser }) => {
   console.log(messages, "messageas")
   return (
     <>
-      <img src={attachments[0]} />
       {selectedUser ? (<Index.Box className='main-chat-componenet'>
         <Index.Box className='main-chat-box'>
           {messages.map((msg, index) => {
@@ -150,10 +153,10 @@ const UserChat = ({ selectedUser }) => {
                 {/* senderside */}
 
                 <Index.Box className='sender-reciver-box'>
-                  {msg.to && (
+                  {(msg.to) && (
                     <Index.Box className="message-right">
                       <Index.Box className="message-text-sender">
-                        <p className="p-msgto">{msg.to}</p>
+                       {msg.to && <p className="p-msgto">{msg.to}</p>}
                         {msg.image && (
                           <Index.Box className="image-row">
                             {msg.image.slice(0, 2).map((image, imageIndex) => (
@@ -249,11 +252,31 @@ const UserChat = ({ selectedUser }) => {
             );
           })}
         </Index.Box>
+
+        <Index.Box className="image-preview-container">
+          {attachments.map((file, index) => (
+            <Index.Box key={index} className="image-preview-size">
+              <img
+                src={URL.createObjectURL(file)}
+                alt={`Preview ${index + 1}`}
+                className='main-image-preview'
+              />
+              <IconButton
+                size="small"
+                className="close-icon-prev"
+                onClick={() => handleRemoveAttachment(index)}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </Index.Box>
+          ))}
+        </Index.Box>
         <Index.Box className='main-send-msg'>
           <Index.Box className='main-send-contains'>
             <Index.Box className='main-home-icon'><Index.GridViewIcon className='icon-dashboard' /></Index.Box>
             <Index.Box className='main-sent-data'>
               <Index.Box className='main-send-box'>
+
                 <Index.Box className='test-msg-write'>
                   <Index.TextField className="outlined-basic" placeholder='Type your message' value={newMessage}
                     onChange={handleMessageChange} />
@@ -265,7 +288,7 @@ const UserChat = ({ selectedUser }) => {
                       //  id="select-file"
                       id="fileInput"
                       type='file'
-                      multiple
+                      inputProps={{ multiple: true }}
                       onChange={handleAttachmentChange}
                       style={{ display: 'none' }} />
                   </Index.Box>
