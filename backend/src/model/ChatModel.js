@@ -4,13 +4,11 @@ import { mongoose } from "../index.js";
 const ChatMessageSchema = new mongoose.Schema(
     {
         sender: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+            type: String,
             required: true
         },
         receiver: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+            type: String,
             required: false
         },
         room: {

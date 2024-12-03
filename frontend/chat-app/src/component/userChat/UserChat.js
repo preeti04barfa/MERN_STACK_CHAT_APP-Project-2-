@@ -58,7 +58,7 @@ const chatArray = [
   { _id: 13, to: "Sounds good!", timestamp: "2024-11-25T10:15:00Z" },
 ];
 
-const UserChat = ({ selectedUser }) => {
+const UserChat = ({ selectedUser, socket }) => {
 
   let lastDate = "";
   const [showAllImages, setShowAllImages] = useState({});

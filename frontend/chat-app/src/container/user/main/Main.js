@@ -7,13 +7,13 @@ import { Outlet } from 'react-router-dom';
 import UserChat from '../../../component/userChat/UserChat';
 
 
-const Main = () => {
+const Main = ({socket}) => {
     const [selectedUser, setSelectedUser] = useState(null); 
 
     return (
         <Index.Box className='header-sidebar'>
             <Index.Box>
-                <Sidebar setSelectedUser={setSelectedUser} selectedUser={selectedUser} />
+                <Sidebar setSelectedUser={setSelectedUser} selectedUser={selectedUser} socket={socket} />
             </Index.Box>
             <Index.Box>
                 <Index.Box>
@@ -22,7 +22,7 @@ const Main = () => {
                 <Index.Box>
                     <Outlet />
                 </Index.Box>
-                <UserChat selectedUser={selectedUser}  />
+                <UserChat selectedUser={selectedUser}  socket={socket}/>
             </Index.Box>
         </Index.Box>
     );

@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Index from "../../index"
 import "../sidebar/Sidebar.css";
 import Userlist from '../../../component/userList/Userlist';
-import { toast } from 'react-toastify';
-import { DataService } from '../../../config/DataService';
-import { Api } from '../../../config/Api';
 
 const Search = Index.styled('div')(({ theme }) => ({
     position: 'relative',
@@ -46,47 +43,18 @@ const StyledInputBase = Index.styled(Index.InputBase)(({ theme }) => ({
 }));
 
 
-const Sidebar = ({ setSelectedUser, selectedUser }) => {
+const Sidebar = ({ setSelectedUser, selectedUser, socket }) => {
     const [searchUser, setSearchUser] = useState("");
     const [name, setName] = useState('');
     
     useEffect(() => {
-        const getToken = localStorage.getItem('userToken');
-
+        const getToken = localStorage.getItem('userName');
         if (getToken) {
-            try {
-                const parsedToken = JSON.parse(getToken); 
-                fetchUserData(parsedToken.token || parsedToken); 
-            } catch (e) {
-                console.error("Error parsing token", e);
-                toast.error("Invalid user token");
-            }
-        } else {
-            console.log("No token found");
+            const parsedToken = JSON.parse(getToken);
+          setName(parsedToken);
         }
-    }, []);
-
-    const fetchUserData = async (token) => {
-        console.log(token,"token");
-        
-        try {
-            const response = await DataService.get(Api.GET_SINGLE, {
-                headers: {
-                    'auth': token,
-                },
-            });
-            const userDataCredential = response.data.data;
-            localStorage.setItem('userDataCredential', JSON.stringify(userDataCredential));
-            setName(userDataCredential.username);
-        } catch (error) {
-            if (error.response && [400, 500].includes(error.response.status)) {
-                toast.error(error.response.data.message);
-            } else {
-                toast.error(error.response ? error.response.data.message : "An unexpected error occurred");
-            }
-            console.error("Error fetching user data", error);
-        }
-    };
+      }, []);
+    
 
     return (
         <Index.Box className='box-one'>
@@ -122,6 +90,7 @@ const Sidebar = ({ setSelectedUser, selectedUser }) => {
                         searchUser={searchUser}
                         setSelectedUser={setSelectedUser}
                         selectedUser={selectedUser}
+                        socket={socket}
                     />
                 </Index.Box>
             </Index.Box>

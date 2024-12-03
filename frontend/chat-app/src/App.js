@@ -1,8 +1,16 @@
+import { useEffect, useState } from "react";
 import Router from "./router/Router";
-
+import io from "socket.io-client";
 function App() {
+  const [socket, setSocket] = useState(null)
+  
+  useEffect(()=>{
+    const socketUrl = io('http://localhost:3002');
+    setSocket(socketUrl)
+    
+  },[])
   return (
-    <><Router/></>
+    <><Router socket={socket}/></>
   );
 }
 

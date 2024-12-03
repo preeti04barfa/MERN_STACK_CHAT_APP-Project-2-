@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Index from '../../container/index';
 import "../userList/Userlist.css";
 import avtarImage from "../../assets/png/avtar.png";
@@ -9,40 +9,48 @@ const formatDate = (dateString) => {
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
 
-
     if (messageDate.toDateString() === today.toDateString()) {
         return messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
-
-
-    // if (messageDate.toDateString() === yesterday.toDateString()) {
-    //     return 'Yesterday';
-    // }
-
-
     const diffInDays = Math.floor((today - messageDate) / (1000 * 3600 * 24));
     if (diffInDays <= 6) {
-
         return messageDate.toLocaleString('en-us', { weekday: 'short' });
     }
     return messageDate.toLocaleDateString();
 };
 
-const userMessages = [
-    { userName: 'Preeti', message: 'Hello there!Hello there!Hello there!Hello there!', time: '2024-11-28T10:05:00Z', isRead: true },
-    { userName: 'Durgesh', message: 'How are you?', time: '2024-11-27T10:05:00Z', isRead: true },
-    { userName: 'Jagriti', message: 'Good morning!', time: '2024-11-26T10:05:00Z', isRead: false },
-    { userName: 'Jatin', message: 'See you soon.', time: '2024-11-25T10:05:00Z', isRead: true },
-    { userName: 'Nilesh', message: 'Good morning!', time: '2024-11-24T10:05:00Z', isRead: false },
-    { userName: 'Surbhi', message: 'See you soon.', time: '2024-11-23T10:05:00Z', isRead: true },
-    { userName: 'Sachin', message: 'See you soon.', time: '2024-11-22T10:05:00Z', isRead: true },
-    { userName: 'Sachin', message: 'See you soon.', time: '2024-11-21T10:05:00Z', isRead: true },
-    { userName: 'Sachin', message: 'See you soon.', time: '2024-11-03T10:05:00Z', isRead: true },
-];
+const Userlist = ({ searchUser, selectedUser, setSelectedUser, socket }) => {
+    const [users, setUsers] = useState([]);
+    const [handleUserId, setHandleUserId] = useState('');
+    console.log(users, "usersusers");
+    const getUserId = localStorage.getItem('userId');
+    console.log(getUserId, "getUserId")
+    useEffect(() => {
+        if (socket) {
+            socket.on('users', (userList) => {
+                console.log(userList, "userList");
+                const filteredUsers = userList.filter(user => user.id !== getUserId);
+                setUsers(filteredUsers);
+            });
+            return () => {
+                socket.off('users');
+            };
+        }
+    }, [socket]);
 
-const Userlist = ({ searchUser, selectedUser, setSelectedUser }) => {
-    const filteredData = userMessages.filter((item) =>
+    const handleCreateRoom = () => {
+        if (socket) {
+            socket.on('join room', (getUserId,handleUserId) => {
+                setUsers(filteredUsers);
+            });
+            return () => {
+                socket.off('users');
+            };
+        }
+    }
+
+    const filteredData = users.filter((item) =>
         item.userName.toLowerCase().includes(searchUser.toLowerCase())
     );
 
@@ -53,7 +61,11 @@ const Userlist = ({ searchUser, selectedUser, setSelectedUser }) => {
                     <Index.Box
                         className={`userdata-main ${user.userName === selectedUser ? 'selected' : ''}`}
                         key={index}
-                        onClick={() => setSelectedUser(user.userName)}
+                        onClick={() => {
+                            setSelectedUser(user.userName);
+                            handleUserId(user.id); // Assuming you want to handle `user.id` in some way
+                        }}
+
                     >
                         <Index.Box className="user-image">
                             <img src={avtarImage} alt={`${user.userName}'s avatar`} />
