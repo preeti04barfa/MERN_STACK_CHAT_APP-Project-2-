@@ -11,11 +11,11 @@ const ChatMessageSchema = new mongoose.Schema(
             type: String,
             required: false
         },
-        room: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Room",
-            required: true
-        },
+        // room: {
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     ref: "Room",
+        //     required: true
+        // },
         message: {
             type: String,
             required: true

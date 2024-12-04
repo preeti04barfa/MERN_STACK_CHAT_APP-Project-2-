@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Index from "../../container/index";
 import "../userChat/UserChat.css";
 import chatImage from "../../assets/jpg/chat-image.jpg";
@@ -43,31 +43,62 @@ const formatTime = (timestamp) => {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
-const chatArray = [
-  { _id: 1, from: "Hi! How are you?", timestamp: "2024-11-22T10:00:00Z" },
-  { _id: 2, to: "I'm good, thanks! What about you? kbdfkshb sa,dfhsakdf a,jsdfgbasdfk asfgasd fa,sdkfgbm df,asjkdkd c,asdkufhasdnfmahbs", image: [chatImage1, chatImage, chatImage2], timestamp: "2024-11-22T10:02:00Z" },
-  { _id: 3, from: "I'm doing great! Working on a new project.", timestamp: "2024-11-22T10:05:00Z" },
-  { _id: 4, from: "That’s awesome! Let me know if I can help.", timestamp: "2024-11-22T10:07:00Z" },
-  { _id: 5, to: "Sounds good!", image: [chatImage1, chatImage2, chatImage], timestamp: "2024-11-25T10:15:00Z" },
-  { _id: 6, from: "I'm doing great! Working on a new project.", timestamp: "2024-11-25T10:05:00Z" },
-  { _id: 7, from: "That’s awesome! Let me know if I can help.", timestamp: "2024-11-25T10:07:00Z" },
-  { _id: 8, to: "Sounds good!", timestamp: "2024-11-25T10:15:00Z" },
-  { _id: 10, from: "That’s awesome! Let me know if I can help.", timestamp: "2024-11-25T10:07:00Z" },
-  { _id: 11, to: "Sounds good!", timestamp: "2024-11-25T10:15:00Z" },
-  { _id: 12, from: "That’s awesome! Let me know if I can help.", image: [chatImage, chatImage, chatImage1, chatImage, chatImage2, chatImage1], timestamp: "2024-11-25T10:07:00Z" },
-  { _id: 13, to: "Sounds good!", timestamp: "2024-11-25T10:15:00Z" },
-];
-
 const UserChat = ({ selectedUser, socket }) => {
-
+  console.log(selectedUser,"selectedUser");
+  
+  const getSenderId = () => localStorage.getItem('userId');
+  console.log(getSenderId(),"getSenderId");
   let lastDate = "";
   const [showAllImages, setShowAllImages] = useState({});
   const [selectedImage, setSelectedImage] = useState(null)
   const [attachments, setAttachments] = useState([]);
-  const [messages, setMessages] = useState(chatArray);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  console.log(messages,"messages");
+  const filteredMessages = messages.filter(
+    (message) =>
+      (message.sender === getSenderId() && message.receiver === selectedUser?.id) ||
+      (message.sender === selectedUser?.id && message.receiver === getSenderId())
+  );
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('new message', (msg) => {
+        console.log(msg,"jhghgnhghg")
+        console.log( getSenderId()," getSenderId()");
+        console.log(selectedUser?.id,"selectedUser?.id");
+        
+        
+        const isMyConversation = (msg.sender === getSenderId() && msg.receiver === selectedUser?.id) ||
+        (msg.sender === selectedUser?.id && msg.receiver === getSenderId())
+        console.log(isMyConversation,"isMyConversation");
+        
+        // setMessages((prevMessages) => {
+        //   const newMessages = [...prevMessages, msg];
+        //   return newMessages.filter(
+        //     (message) =>
+        //       (message.sender === getSenderId() && message.receiver === selectedUser?.id) ||
+        //       (message.sender === selectedUser?.id && message.receiver === getSenderId())
+        //   );
+        // });
+        if(isMyConversation){
+          setMessages((prevMessages) => ([...prevMessages, msg]));
+        }
+      });
+      if (selectedUser) {
+        socket.emit('get messages', { senderId: getSenderId(), receiverId: selectedUser.id });
+      }
 
+      socket.on('filtered messages', (filteredMessages) => {
+        setMessages(filteredMessages);
+      });
+
+      return () => {
+        socket.off('new message');
+        socket.off('filtered messages');
+      };
+    }
+  }, [socket, selectedUser]);
 
   const handleImageClick = (id) => {
     setShowAllImages((prev) => ({
@@ -111,32 +142,52 @@ const UserChat = ({ selectedUser, socket }) => {
     setAttachments(newAttachments);
   };
 
+  // const handleSendMessage = () => {
+  //   if (newMessage.trim() || attachments.length > 0) {
+
+  //     const newMsg = {
+  //       sender: getSenderId(),
+  //       receiver: selectedUser?.id,
+  //       message: newMessage,
+  //       // timestamp: new Date().toISOString()
+  //     };
+  //     if (attachments.length > 0) {
+  //       newMsg.image = attachments.map(file => URL.createObjectURL(file))
+  //       // newMsg.image=attachments.map(file => URL.createObjectURL(file))
+
+  //     }
+  //     console.log(newMsg, "newmsg")
+  //     // setMessages([...messages, newMsg]);
+  //     socket.emit('chat message', JSON.stringify(newMsg));
+  //     setNewMessage('');
+  //     setAttachments([]);
+  //   }
+  // };
+
+
   const handleSendMessage = () => {
     if (newMessage.trim() || attachments.length > 0) {
-
       const newMsg = {
-        _id: messages?.length + 1,
-        to: newMessage,
-        timestamp: new Date().toISOString()
+        sender: getSenderId(),
+        receiver: selectedUser?.id,
+        message: newMessage,
+        image: attachments.length > 0 ? attachments.map(file => URL.createObjectURL(file)) : undefined,
+        timestamp: new Date().toISOString(),
       };
-      if (attachments.length > 0) {
-        newMsg.image = attachments.map(file => URL.createObjectURL(file))
-        // newMsg.image=attachments.map(file => URL.createObjectURL(file))
-
-      }
-      console.log(newMsg, "newmsg")
-      setMessages([...messages, newMsg]);
+      socket.emit('chat message', newMsg);
+      setMessages((prevMessages) => [...prevMessages, newMsg]);
       setNewMessage('');
       setAttachments([]);
+
+      // socket.on('new message')
     }
   };
-
   console.log(messages, "messageas")
   return (
     <>
       {selectedUser ? (<Index.Box className='main-chat-componenet'>
         <Index.Box className='main-chat-box'>
-          {messages.map((msg, index) => {
+          {messages?.map((msg, index) => {
             const messageDate = formatDate(msg.timestamp);
             const messageTime = formatTime(msg.timestamp);
 
@@ -153,10 +204,10 @@ const UserChat = ({ selectedUser, socket }) => {
                 {/* senderside */}
 
                 <Index.Box className='sender-reciver-box'>
-                  {(msg.to) && (
+                  {(msg.sender === getSenderId()) && (
                     <Index.Box className="message-right">
                       <Index.Box className="message-text-sender">
-                       {msg.to && <p className="p-msgto">{msg.to}</p>}
+                       {msg.message && <p className="p-msgto">{msg.message}</p>}
                         {msg.image && (
                           <Index.Box className="image-row">
                             {msg.image.slice(0, 2).map((image, imageIndex) => (
@@ -201,10 +252,10 @@ const UserChat = ({ selectedUser, socket }) => {
                   {/* reciverside */}
 
                   <Index.Box className="message-main-box">
-                    {msg.from && (
+                    {(msg.sender !== getSenderId()) && (
                       <Index.Box className="message-left">
                         <Index.Box className="message-text-reciver">
-                          <p className="p-msgfrom">{msg.from}</p>
+                          <p className="p-msgfrom">{msg.message}</p>
                           {msg.image && (
                             <Index.Box className="image-row">
                               {msg.image.slice(0, 2).map((image, imageIndex) => (
@@ -279,7 +330,7 @@ const UserChat = ({ selectedUser, socket }) => {
 
                 <Index.Box className='test-msg-write'>
                   <Index.TextField className="outlined-basic" placeholder='Type your message' value={newMessage}
-                    onChange={handleMessageChange} />
+                   onChange={(e) => setNewMessage(e.target.value)}/>
                 </Index.Box>
                 <Index.Box className='attach-sent-icon'>
                   <Index.Box className='file-attach-icon'>

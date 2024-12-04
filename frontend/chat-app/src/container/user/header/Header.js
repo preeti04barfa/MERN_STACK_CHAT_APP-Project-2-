@@ -5,7 +5,7 @@ import avtarImage from '../../../assets/png/avtar.png';
   
 
 const Header = ({ selectedUser }) => {
-    console.log(selectedUser,"selectedUser");
+    console.log(selectedUser?.userName,"selectedUser");
     
     return (
         <>
@@ -16,7 +16,7 @@ const Header = ({ selectedUser }) => {
                 </Index.Box>
                 <Index.Box className="username-offon">
                     <Index.Box className='username-name'>
-                        <p><strong>{selectedUser}</strong></p>
+                        <p><strong>{selectedUser.userName}</strong></p>
                     </Index.Box>
                     <Index.Box className='user-status'>
                         <Index.Box className='status-icon'> <Index.FiberManualRecordIcon className='onoff-icon'/></Index.Box>

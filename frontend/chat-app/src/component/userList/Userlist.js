@@ -22,15 +22,15 @@ const formatDate = (dateString) => {
 
 const Userlist = ({ searchUser, selectedUser, setSelectedUser, socket }) => {
     const [users, setUsers] = useState([]);
-    const [handleUserId, setHandleUserId] = useState('');
-    console.log(users, "usersusers");
-    const getUserId = localStorage.getItem('userId');
+    // const [handleUserId, setHandleUserId] = useState('');
+    console.log(selectedUser, "selectedUserselectedUser");
+    const getUserId = () => localStorage.getItem('userId');
     console.log(getUserId, "getUserId")
     useEffect(() => {
         if (socket) {
             socket.on('users', (userList) => {
                 console.log(userList, "userList");
-                const filteredUsers = userList.filter(user => user.id !== getUserId);
+                const filteredUsers = userList.filter(user => user.id !== getUserId());
                 setUsers(filteredUsers);
             });
             return () => {
@@ -39,16 +39,16 @@ const Userlist = ({ searchUser, selectedUser, setSelectedUser, socket }) => {
         }
     }, [socket]);
 
-    const handleCreateRoom = () => {
-        if (socket) {
-            socket.on('join room', (getUserId,handleUserId) => {
-                setUsers(filteredUsers);
-            });
-            return () => {
-                socket.off('users');
-            };
-        }
-    }
+    // const handleCreateRoom = () => {
+    //     if (socket) {
+    //         socket.on('join room', (getUserId,handleUserId) => {
+    //             setUsers(filteredUsers);
+    //         });
+    //         return () => {
+    //             socket.off('users');
+    //         };
+    //     }
+    // }
 
     const filteredData = users.filter((item) =>
         item.userName.toLowerCase().includes(searchUser.toLowerCase())
@@ -60,10 +60,13 @@ const Userlist = ({ searchUser, selectedUser, setSelectedUser, socket }) => {
                 {filteredData.map((user, index) => (
                     <Index.Box
                         className={`userdata-main ${user.userName === selectedUser ? 'selected' : ''}`}
-                        key={index}
+                        key={user.id}
                         onClick={() => {
-                            setSelectedUser(user.userName);
-                            handleUserId(user.id); // Assuming you want to handle `user.id` in some way
+                            setSelectedUser(user);
+                            // handleUserId(user.id); 
+                            if (socket) {
+                                socket.emit('get messages', { senderId: getUserId(), receiverId: user.id });
+                            }
                         }}
 
                     >

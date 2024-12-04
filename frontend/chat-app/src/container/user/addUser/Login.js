@@ -33,6 +33,8 @@ const Login = ({ socket }) => {
       localStorage.setItem('userName', JSON.stringify(values.username));
       toast.success('User Added');
       console.log( JSON.stringify(socket.id), "socketis");
+      console.log(socket.id,"socket.id");
+      
       localStorage.setItem('userId',(socket.id));
       
       socket.emit('set username', { username: values.username });
