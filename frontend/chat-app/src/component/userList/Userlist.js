@@ -22,33 +22,32 @@ const formatDate = (dateString) => {
 
 const Userlist = ({ searchUser, selectedUser, setSelectedUser, socket }) => {
     const [users, setUsers] = useState([]);
-    // const [handleUserId, setHandleUserId] = useState('');
-    console.log(selectedUser, "selectedUserselectedUser");
+    const [seenMessages, setSeenMessages] = useState({});
+
     const getUserId = () => localStorage.getItem('userId');
-    console.log(getUserId, "getUserId")
+
     useEffect(() => {
         if (socket) {
             socket.on('users', (userList) => {
-                console.log(userList, "userList");
                 const filteredUsers = userList.filter(user => user.id !== getUserId());
                 setUsers(filteredUsers);
             });
+
+            socket.on('message seen', ({ sender, receiver, isRead }) => {
+                setSeenMessages(prevState => ({
+                  ...prevState,
+                  [sender]: isRead,
+                  [receiver]: isRead,
+                }));
+              });
+        
+
             return () => {
                 socket.off('users');
+                socket.off('message seen');
             };
         }
     }, [socket]);
-
-    // const handleCreateRoom = () => {
-    //     if (socket) {
-    //         socket.on('join room', (getUserId,handleUserId) => {
-    //             setUsers(filteredUsers);
-    //         });
-    //         return () => {
-    //             socket.off('users');
-    //         };
-    //     }
-    // }
 
     const filteredData = users.filter((item) =>
         item.userName.toLowerCase().includes(searchUser.toLowerCase())
@@ -57,18 +56,20 @@ const Userlist = ({ searchUser, selectedUser, setSelectedUser, socket }) => {
     return (
         <Index.Box className="user-list">
             <Index.Box className="userlist-container">
-                {filteredData.map((user, index) => (
+                {filteredData.map((user) => {
+                    {console.log(user.sender ,socket?.id,"user")}
+                    return(
+
                     <Index.Box
                         className={`userdata-main ${user.userName === selectedUser ? 'selected' : ''}`}
                         key={user.id}
                         onClick={() => {
                             setSelectedUser(user);
-                            // handleUserId(user.id); 
                             if (socket) {
                                 socket.emit('get messages', { senderId: getUserId(), receiverId: user.id });
+                                socket.emit('message opened', { sender: getUserId(), receiver: user.id });
                             }
                         }}
-
                     >
                         <Index.Box className="user-image">
                             <img src={avtarImage} alt={`${user.userName}'s avatar`} />
@@ -84,19 +85,20 @@ const Userlist = ({ searchUser, selectedUser, setSelectedUser, socket }) => {
                             </Index.Box>
                             <Index.Box className="user-msg">
                                 <Index.Box>
-                                    <p>{user.message.length > 25 ? `${user.message.slice(0, 25)}...` : user.message}</p>
+                                    <p>{user?.message && user?.message?.length > 25 ? `${user.message.slice(0, 25)}...` : user?.message}</p>
                                 </Index.Box>
                                 <Index.Box>
-                                    <p>
+                                    {user?.message && user?.message !== "No message" && user.sender === socket?.id && (
+                                        
                                         <Index.DoneAllIcon
-                                            style={{ color: user.isRead ? 'blue' : 'gray' }}
+                                            style={{ color: seenMessages[user.sender] || user.isRead  ? 'green' : 'gray' }} 
                                         />
-                                    </p>
+                                    )}
                                 </Index.Box>
                             </Index.Box>
                         </Index.Box>
                     </Index.Box>
-                ))}
+                )})}
                 {filteredData.length === 0 && (
                     <Index.Box className="no-data">
                         <p>No users found.</p>

@@ -64,10 +64,6 @@ const UserChat = ({ selectedUser, socket }) => {
   useEffect(() => {
     if (socket) {
       socket.on('new message', (msg) => {
-        console.log(msg,"jhghgnhghg")
-        console.log( getSenderId()," getSenderId()");
-        console.log(selectedUser?.id,"selectedUser?.id");
-        
         
         const isMyConversation = (msg.sender === getSenderId() && msg.receiver === selectedUser?.id) ||
         (msg.sender === selectedUser?.id && msg.receiver === getSenderId())

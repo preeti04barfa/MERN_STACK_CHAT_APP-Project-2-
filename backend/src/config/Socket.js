@@ -9,69 +9,65 @@ export const setupSocket = (server) => {
   });
 
   const users = [];
+
+  
   const messages = [];
+
+  
+  const userMessages = new Map(); 
+
+  
+
+  const getUserLatestMessage = (userId, reciverId) => {
+    const key = `${userId}-${reciverId}`;
+    return userMessages.get(key) || { message: "No message", time: new Date().toISOString(),isRead:false,sender:''};
+  };
 
   io.on('connection', (socket) => {
     console.log('A guest connected:', socket.id);
 
-    io.emit('users', users);
-
-    // socket.on('set username', ({ username }) => {
-    //   const user = {
-    //     id: socket.id,
-    //     userName: username || `User${users.length + 1}`,
-    //     message: "Hello",
-    //     time: '2024-11-28T10:05:00Z',
-    //     isRead: true,
-    //   };
-    //   users.push(user);
-    //   console.log(users, "connected users");
-    //   io.emit('users', users);
-    // });
-
-
     socket.on('set username', ({ username }) => {
-      const userMessages = messages.filter(
-        (msg) => msg.sender === socket.id || msg.receiver === socket.id
-      );
-      
-   
-      const latestMessage = userMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
-    
       const user = {
         id: socket.id,
-        userName: username || `User${users.length + 1}`,
-        message: latestMessage ? latestMessage.message : "No message",
-        time: latestMessage ? latestMessage.timestamp : new Date().toISOString(), 
-        isRead: latestMessage ? latestMessage.isRead : true, 
+        userName: username,
+        sender:"",
+        message: "No message",
+        time: new Date().toISOString(),
+        isRead: false,
       };
     
       users.push(user);
-      console.log(users, "connected users");
-      io.emit('users', users);
+      console.log(users,"user");
+      io.sockets.sockets.forEach((userSocket) => {
+        const userId = userSocket.id;
+        const usersData = users
+          .filter(u => u.id !== userId)
+          .map(u => ({
+            ...u,
+            message: getUserLatestMessage(userId, u.id).message,
+            time: getUserLatestMessage(userId, u.id).time,
+            sender: getUserLatestMessage(userId, u.id).sender
+          }));
+        userSocket.emit('users', usersData);
+      });
     });
     
     socket.on('get messages', ({ senderId, receiverId }) => {
-      console.log("hit get message ");
+      console.log("hit get message");
       
-      if(messages){
       const filteredMessages = messages.filter(
         msg => (msg.sender === senderId && msg.receiver === receiverId) ||
                (msg.sender === receiverId && msg.receiver === senderId)
       );
-      socket.emit('filtered messages', filteredMessages);}
-      else{
-        console.log("no chat fround");
-        
-      }
+      socket.emit('filtered messages', filteredMessages);
     });
 
     socket.on('chat message', (data) => {
-      let sender, receiver, message;
+      let sender, receiver, message, image;
     
       try {
         const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
-        ({ sender, receiver, message } = parsedData);
+        ({ sender, receiver, message, image } = parsedData);
       } catch (error) {
         socket.emit('error', { message: 'Invalid message format' });
         return;
@@ -82,26 +78,67 @@ export const setupSocket = (server) => {
         sender,
         receiver,
         message,
+        image,
         timestamp: new Date().toISOString(),
+        isRead:false
       };
     
-      messages.push(chat); 
-      console.log('msg save in array:', messages);
-      const updateUserMessage = (userId, message, timestamp) => {
-        const userIndex = users.findIndex((user) => user.id === userId);
-        if (userIndex !== -1) {
-          users[userIndex].message = message;
-          users[userIndex].time = timestamp;
-          io.emit('users', users);
-        }
-      };
+      messages.push(chat);
+      console.log(messages,"Messages");
+      
+      userMessages.set(`${sender}-${receiver}`, { message,sender, time: chat.timestamp, isRead:chat.isRead });
+      userMessages.set(`${receiver}-${sender}`, { message,sender, time: chat.timestamp, isRead:chat.isRead });
+      console.log(userMessages,"userMessages");
 
-      updateUserMessage(sender, message, chat.timestamp);
-      updateUserMessage(receiver, message, chat.timestamp);
+      [sender, receiver].forEach(userId => {
+        const userSocket = io.sockets.sockets.get(userId);
+        if (userSocket) {
+          const usersData = users
+            .filter(u => u.id !== userId)
+            .map(u => ({
+              ...u,
+              message: getUserLatestMessage(userId, u.id).message,
+              time: getUserLatestMessage(userId, u.id).time,
+              sender:getUserLatestMessage(userId, u.id).sender,
+            }));
+          userSocket.emit('users', usersData);
+        }
+      });
 
       io.to(receiver).emit('new message', chat);
-      console.log(`msg emit ${receiver}`);
+      
+      socket.emit('message sent', chat);
     });
+
+    
+    socket.on('message opened', (data) => {
+      const { sender, receiver } = data;
+      console.log("log");
+      
+
+      userMessages.set(`${sender}-${receiver}`, { ...userMessages.get(`${sender}-${receiver}`), isRead: true });
+      userMessages.set(`${receiver}-${sender}`, { ...userMessages.get(`${receiver}-${sender}`), isRead: true });
+    
+      io.to(sender).emit('message seen', { receiver, isRead: true });
+      io.to(receiver).emit('message seen', { sender, isRead: true });
+
+      [sender, receiver].forEach(userId => {
+        const userSocket = io.sockets.sockets.get(userId);
+        if (userSocket) {
+          const usersData = users
+            .filter(u => u.id !== userId)
+            .map(u => ({
+              ...u,
+              message: getUserLatestMessage(userId, u.id).message,
+              sender: getUserLatestMessage(userId, u.id).sender,
+              isRead: getUserLatestMessage(userId, u.id).isRead,
+            }));
+          userSocket.emit('users', usersData);
+        }
+      });
+    });
+    
+
     socket.on('disconnect', () => {
       console.log('Guest disconnected:', socket.id);
 
@@ -109,11 +146,32 @@ export const setupSocket = (server) => {
       if (userIndex !== -1) {
         users.splice(userIndex, 1);
         console.log(`Removed user ${socket.id}`);
-        console.log(users, "connected users");
-        io.emit('users', users);
+        
+        userMessages.forEach((_, key) => {
+          if (key.includes(socket.id)) {
+            userMessages.delete(key);
+          }
+        });
+
+        io.sockets.sockets.forEach((userSocket) => {
+          const userId = userSocket.id;
+          const usersData = users
+            .filter(u => u.id !== userId)
+            .map(u => ({
+              ...u,
+              message: getUserLatestMessage(userId, u.id).message,
+              time: getUserLatestMessage(userId, u.id).time,
+              sender:getUserLatestMessage(userId, u.id).sender,
+            }));
+          userSocket.emit('users', usersData);
+        });
       }
+    });
+    socket.on('message sent', (message) => {
+      console.log('Message sent acknowledgement:', message);
     });
   });
 
   return io;
 };
+
